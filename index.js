@@ -41,6 +41,12 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/allCampaigns", async(req, res) => {
+            const cursor = campaignCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         app.get('/campaign/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
@@ -76,13 +82,13 @@ async function run() {
             res.send(result);
         })
 
-        // app.get('myCampaign/:email', async(req, res) => {
-        //     const email = req.params.email;
-        //     const query = {email: email};
-        //     const cursor = campaignCollection.find(query);
-        //     const result = await cursor.toArray();
-        //     res.send(result);
-        // })
+        app.get('/myCampaigns/:email', async(req, res) => {
+            const email = req.params.email;
+            const query = {email: email};
+            const cursor = campaignCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
 
         app.post("/donations", async(req, res) => {
             const newDonation = req.body;
