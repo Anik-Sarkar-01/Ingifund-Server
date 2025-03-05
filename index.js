@@ -27,6 +27,8 @@ async function run() {
 
         const campaignCollection = client.db("campaignDB").collection("campaigns");
 
+        const donationCollection = client.db("campaignDB").collection("donations");
+
         app.post("/campaigns", async(req, res) => {
             const newCampaign = req.body;
             const result = await campaignCollection.insertOne(newCampaign);
@@ -81,6 +83,20 @@ async function run() {
         //     const result = await cursor.toArray();
         //     res.send(result);
         // })
+
+        app.post("/donations", async(req, res) => {
+            const newDonation = req.body;
+            const result = await donationCollection.insertOne(newDonation);
+            res.send(result);
+        })
+
+        app.get("/donations/:email", async(req, res) => {
+            const email = req.params.email;
+            const query = {donorEmail: email};
+            const cursor = donationCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
