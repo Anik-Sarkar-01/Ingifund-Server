@@ -46,6 +46,42 @@ async function run() {
             res.send(result);
         })
 
+        app.put('/campaign/:id', async(req, res) => {
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)};
+            const options = {upsert: true};
+            const updatedCampaign = req.body;
+            const campaign = {
+                $set: {
+                    image: updatedCampaign.image,
+                    title: updatedCampaign.title,
+                    type: updatedCampaign.type,
+                    description: updatedCampaign.description,
+                    amount: updatedCampaign.amount,
+                    deadline: updatedCampaign.deadline,
+                    email: updatedCampaign.email,
+                    name: updatedCampaign.name,
+                }
+            }
+            const result = await campaignCollection.updateOne(filter, campaign, options);
+            res.send(result);
+        })
+
+        app.delete('/campaign/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await campaignCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // app.get('myCampaign/:email', async(req, res) => {
+        //     const email = req.params.email;
+        //     const query = {email: email};
+        //     const cursor = campaignCollection.find(query);
+        //     const result = await cursor.toArray();
+        //     res.send(result);
+        // })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
