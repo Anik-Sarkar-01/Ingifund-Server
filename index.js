@@ -35,14 +35,22 @@ async function run() {
             res.send(result);
         })
 
-        app.get("/campaigns", async(req, res) => {
-            const cursor = campaignCollection.find().limit(6);
+        app.get("/allCampaigns", async(req, res) => {
+            const cursor = campaignCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get("/allCampaigns", async(req, res) => {
-            const cursor = campaignCollection.find();
+        app.get("/runningCampaigns", async (req, res) => {
+            const currentDate = new Date().toISOString().split("T")[0];
+            const query = { deadline: { $gt: currentDate } };
+            const cursor = campaignCollection.find(query).limit(6);
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
+        app.get("/allCampaignsSorted", async(req, res) => {
+            const cursor = campaignCollection.find().sort({"amount": 1});
             const result = await cursor.toArray();
             res.send(result);
         })
